@@ -1,0 +1,21 @@
+<odoo>
+    <record id="rental_return_wizard_view_form" model="ir.ui.view">
+        <field name="name">rental.return.wizard.form</field>
+        <field name="model">rental.return.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="rental_id" />
+                    <field name="mileage" />
+                    <field name="has_damage" />
+                    <field name="damage_note" invisible="not has_damage" required="has_damage" />
+                </group>
+                <footer>
+                    <button name="action_confirm_return" type="object"
+                        string="Confirm Return" class="btn-primary" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

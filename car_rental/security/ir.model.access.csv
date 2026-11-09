@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rental_car_agent,rental.car.agent,model_rental_car,car_rental.group_rental_agent,1,0,0,0
+access_rental_car_manager,rental.car.manager,model_rental_car,car_rental.group_rental_manager,1,1,1,1
+access_rental_rental_agent,rental.rental.agent,model_rental_rental,car_rental.group_rental_agent,1,1,1,0
+access_rental_rental_manager,rental.rental.manager,model_rental_rental,car_rental.group_rental_manager,1,1,1,1
+access_rental_return_wizard_agent,rental.return.wizard.agent,model_rental_return_wizard,car_rental.group_rental_agent,1,1,1,1

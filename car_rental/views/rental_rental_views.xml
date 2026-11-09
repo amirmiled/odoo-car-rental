@@ -1,0 +1,176 @@
+<odoo>
+    <!-- 1. VUE LISTE -->
+    <record id="rental_rental_view_list" model="ir.ui.view">
+        <field name="name">rental.rental.list</field>
+        <field name="model">rental.rental</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_late">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="car_id" />
+                <field name="user_id" optional="show" />
+                <field name="invoice_id" optional="hide" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="duration_days" optional="hide" />
+                <field name="total_price" />
+                <field name="currency_id" column_invisible="1" />
+                <field name="state" widget="badge"
+                    decoration-info="state == 'confirmed'"
+                    decoration-warning="state == 'ongoing'"
+                    decoration-success="state == 'returned'"
+                    decoration-danger="state == 'cancelled'"
+                    decoration-primary="state == 'invoiced'" />
+                <field name="is_late" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. VUE FORMULAIRE -->
+
+
+    <record id="rental_rental_view_form" model="ir.ui.view">
+        <field name="name">rental.rental.form</field>
+        <field name="model">rental.rental</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                        class="btn-primary" invisible="state != 'draft'" />
+                    <button name="action_start" type="object" string="Start Rental"
+                        class="btn-primary" invisible="state != 'confirmed'" />
+                    <button name="action_open_return_wizard" type="object" string="Return Car"
+                        class="btn-primary" invisible="state != 'ongoing'" />
+                    <button name="action_create_invoice" type="object" string="Create Invoice"
+                        class="btn-primary" invisible="state != 'returned'" />
+                    <button name="%(action_report_rental_contract)d" type="action"
+                        string="Print Contract" invisible="state == 'draft'" />
+                    <button name="action_cancel" type="object" string="Cancel"
+                        invisible="state not in ('draft', 'confirmed', 'ongoing')"
+                        groups="car_rental.group_rental_manager" />
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                        invisible="state != 'cancelled'"
+                        groups="car_rental.group_rental_manager" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,confirmed,ongoing,returned,invoiced" />
+                </header>
+                <sheet>
+                    <field name="is_late" invisible="1" />
+                    <div class="alert alert-danger" role="alert" invisible="not is_late">
+                        This rental is late!
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="state != 'draft'" />
+                            <field name="car_id" readonly="state != 'draft'" />
+                            <field name="user_id" />
+                            <field name="invoice_id" invisible="not invoice_id" />
+                        </group>
+                        <group>
+                            <field name="date_start" readonly="state != 'draft'" />
+                            <field name="date_end" readonly="state != 'draft'" />
+                            <field name="duration_days" />
+                            <field name="daily_price" readonly="state != 'draft'" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="total_price" />
+                            <field name="return_mileage"
+                                invisible="state not in ('returned', 'invoiced')" />
+                            <field name="has_damage"
+                                invisible="state not in ('returned', 'invoiced')" />
+                            <field name="damage_note" invisible="not has_damage" />
+                        </group>
+                    </group>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+
+    <!-- 3. VUE KANBAN -->
+
+    <record id="rental_rental_view_kanban" model="ir.ui.view">
+        <field name="name">rental.rental.kanban</field>
+        <field name="model">rental.rental</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" records_draggable="false" group_create="false">
+                <field name="currency_id" />
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold" />
+                        <field name="partner_id" />
+                        <field name="car_id" />
+                        <field name="total_price" widget="monetary" />
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- 4. VUE CALENDRIER -->
+
+    <record id="rental_rental_view_calendar" model="ir.ui.view">
+        <field name="name">rental.rental.calendar</field>
+        <field name="model">rental.rental</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date_start" date_stop="date_end" color="car_id" mode="month">
+                <field name="partner_id" />
+            </calendar>
+        </field>
+    </record>
+
+
+    <!-- 5. VUE RECHERCHE -->
+
+    <record id="rental_rental_view_search" model="ir.ui.view">
+        <field name="name">rental.rental.search</field>
+        <field name="model">rental.rental</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="car_id" />
+                <separator />
+                <filter name="filter_my" string="My Rentals" domain="[('user_id', '=', uid)]" />
+                <separator />
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]" />
+                <filter name="filter_ongoing" string="Ongoing" domain="[('state', '=', 'ongoing')]" />
+                <filter name="filter_returned" string="Returned"
+                    domain="[('state', '=', 'returned')]" />
+                <filter name="filter_invoiced" string="Invoiced"
+                    domain="[('state', '=', 'invoiced')]" />
+                <filter name="filter_late" string="Late"
+                    domain="[('is_late', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_car" string="Car" context="{'group_by': 'car_id'}" />
+                    <filter name="group_partner" string="Customer"
+                        context="{'group_by': 'partner_id'}" />
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- 6. ACTION -->
+    <record id="rental_rental_action" model="ir.actions.act_window">
+        <field name="name">Rentals</field>
+        <field name="res_model">rental.rental</field>
+        <field name="view_mode">list,kanban,calendar,form</field>
+    </record>
+
+    <!-- 7. MENUS -->
+    <menuitem
+        id="rental_menu_rentals"
+        name="Rentals"
+        parent="rental_menu_root"
+        action="rental_rental_action"
+        sequence="10"
+    />
+</odoo>

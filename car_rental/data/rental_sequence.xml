@@ -1,0 +1,8 @@
+<odoo>
+    <record id="seq_rental_rental" model="ir.sequence">
+        <field name="name">Rental Reference</field>
+        <field name="code">rental.rental</field>
+        <field name="prefix">RENT/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

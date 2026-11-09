@@ -1,0 +1,129 @@
+<odoo>
+    <!-- 1. L'ACTION DE RAPPORT -->
+    <record id="action_report_rental_contract" model="ir.actions.report">
+        <field name="name">Rental Contract</field>
+        <field name="model">rental.rental</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">car_rental.report_rental_contract</field>
+        <field name="report_file">car_rental.report_rental_contract</field>
+        <field name="print_report_name">'Contract - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_rental_rental" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- 2. LE TEMPLATE -->
+    <template id="report_rental_contract">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Rental Contract <span t-field="o.name" /></h2>
+
+                        <h4 class="mt-4">Customer</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>
+                                    <strong>Name</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.partner_id" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Driving License</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.partner_id.driving_license" />
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h4 class="mt-4">Vehicle</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>
+                                    <strong>Car</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.car_id" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>License Plate</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.car_id.license_plate" />
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h4 class="mt-4">Rental Details</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>
+                                    <strong>Start Date</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.date_start" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>End Date</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.date_end" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>Days</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.duration_days" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>Daily Price</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.daily_price" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>Total Price</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.total_price" />
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>Customer Signature</p>
+                                <br />
+                                <br />
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Agent Signature</p>
+                                <br />
+                                <br />
+                                <p>____________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
