@@ -32,9 +32,7 @@ Built for small and medium car rental agencies.
 
 ### Calendar view
 
-![Rentals](car_rental/static/description/screenshots/calendar.png)
-
-calendar.png
+![Calendar](car_rental/static/description/screenshots/calendar.png)
 
 ## 🛠️ Technical Stack
 
@@ -75,5 +73,6 @@ calendar.png
 ## 👤 Author
 
 **Amir Miled**, Odoo Developer
-LinkedIN:https://www.linkedin.com/in/amir-miled/
-Email:miledamir8@gmail.com
+
+- LinkedIn: https://www.linkedin.com/in/amir-miled/
+- Email: miledamir8@gmail.com

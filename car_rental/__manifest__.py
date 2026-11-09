@@ -13,7 +13,7 @@ Car Rental Management
 - Public JSON API of available cars
     """,
     'author': 'Amir Miled',
-    'website': 'https://github.com/amirmiled',
+    'website': 'https://github.com/amirmiled/odoo-car-rental',
     'category': 'Services',
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'account'],
